@@ -1,5 +1,13 @@
-const karmaConstants = require('karma').constants;
-const merge = require('webpack-merge');
+const karmaConstants = require( 'karma' ).constants;
+const merge = require( 'webpack-merge' );
+
+let sourcemapPluginExists = false;
+try {
+  require( 'karma-sourcemap-loader' );
+  sourcemapPluginExists = true;
+} catch (ex) {
+
+}
 
 module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
   delete webpackConfig.entry;
@@ -7,10 +15,15 @@ module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
     devtool: 'inline-source-map'
   } );
 
+  const enabledPreprocessors = [ 'webpack' ];
+  if ( sourcemapPluginExists ) {
+    enabledPreprocessors.push( 'sourcemap' );
+  }
+
   const preprocessors = {};
 
   karmaOptions.files.map( fileNameOrPattern => {
-    preprocessors[ fileNameOrPattern ] = [ 'webpack' ];
+    preprocessors[ fileNameOrPattern ] = enabledPreprocessors;
   } );
 
   let karmaConfig = {
