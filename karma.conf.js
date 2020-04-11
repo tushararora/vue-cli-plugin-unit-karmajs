@@ -1,5 +1,4 @@
-const karmaConstants = require('karma').constants;
-const merge = require('webpack-merge');
+const merge = require( 'webpack-merge' );
 
 module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
   delete webpackConfig.entry;
@@ -13,29 +12,18 @@ module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
     preprocessors[ fileNameOrPattern ] = [ 'webpack' ];
   } );
 
-  let karmaConfig = {
-    files: karmaOptions.files,
+  const karmaConfig = Object.assign( {}, karmaOptions );
 
-    reporters: karmaOptions.reporters,
+  Object.assign( karmaConfig, {
+      autoWatch: watch,
 
-    logLevel: karmaConstants.LOG_ERROR,
+      singleRun: !watch,
 
-    autoWatch: watch,
+      preprocessors,
 
-    singleRun: !watch,
-
-    browsers: karmaOptions.browsers,
-
-    frameworks: karmaOptions.frameworks,
-
-    preprocessors,
-
-    webpack: webpackConfig,
-
-    webpackMiddleware: {
-      stats: 'minimal'
+      webpack: webpackConfig
     }
-  };
+  );
 
   return karmaConfig;
 };
