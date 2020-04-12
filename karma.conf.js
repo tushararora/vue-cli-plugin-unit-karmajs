@@ -8,7 +8,7 @@ try {
 
 }
 
-module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
+module.exports = ( { webpackConfig, karmaOptions, watch, browsers } ) => {
   delete webpackConfig.entry;
   webpackConfig = merge( webpackConfig, {
     devtool: 'inline-source-map'
@@ -37,6 +37,13 @@ module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
       webpack: webpackConfig
     }
   );
+
+  if ( browsers ) {
+    if ( (typeof browsers === 'string') || (browsers instanceof String) ) {
+      browsers = browsers.split( ',' );
+    }
+    karmaConfig.browsers = browsers
+  }
 
   return karmaConfig;
 };
