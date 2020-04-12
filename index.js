@@ -46,3 +46,7 @@ module.exports = ( api, projectOptions ) => {
     }
   );
 };
+
+module.exports.defaultModes = {
+  'test:unit': 'test'
+}
