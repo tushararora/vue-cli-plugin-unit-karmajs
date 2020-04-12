@@ -1,7 +1,7 @@
-const karmaConstants = require('karma').constants;
-const merge = require('webpack-merge');
+const karmaConstants = require( 'karma' ).constants;
+const merge = require( 'webpack-merge' );
 
-module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
+module.exports = ( { webpackConfig, karmaOptions, watch, browsers } ) => {
   delete webpackConfig.entry;
   webpackConfig = merge( webpackConfig, {
     devtool: 'inline-source-map'
@@ -12,6 +12,14 @@ module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
   karmaOptions.files.map( fileNameOrPattern => {
     preprocessors[ fileNameOrPattern ] = [ 'webpack' ];
   } );
+
+  if ( browsers ) {
+    if ( (typeof browsers === 'string') || (browsers instanceof String) ) {
+      browsers = browsers.split( ',' );
+    }
+  } else {
+    browsers = karmaOptions.browsers;
+  }
 
   let karmaConfig = {
     files: karmaOptions.files,
@@ -24,7 +32,7 @@ module.exports = ( { webpackConfig, karmaOptions, watch } ) => {
 
     singleRun: !watch,
 
-    browsers: karmaOptions.browsers,
+    browsers: browsers,
 
     frameworks: karmaOptions.frameworks,
 
