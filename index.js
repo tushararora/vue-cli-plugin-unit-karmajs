@@ -27,11 +27,15 @@ module.exports = ( api, projectOptions ) => {
   api.registerCommand( 'test:unit', {
       description: 'Run unit tests with karma',
       usage: 'vue-cli-service test:unit [options] [...files]',
+      options: {
+        '--watch, -w': 'run in watch mode',
+        '--browsers, -b': ' A list of browsers to launch and capture'
+      }
     }, ( args ) => {
       const webpackConfig = api.resolveWebpackConfig();
 
-      process.env.VUE_CLI_BABEL_TARGET_NODE = true
-      process.env.VUE_CLI_BABEL_TRANSPILE_MODULES = true
+      process.env.VUE_CLI_BABEL_TARGET_NODE = true;
+      process.env.VUE_CLI_BABEL_TRANSPILE_MODULES = true;
 
       return new Promise( ( resolve, reject ) => {
         let KarmaServer = require( 'karma' ).Server;
@@ -41,7 +45,8 @@ module.exports = ( api, projectOptions ) => {
           generateKarmaConfig( {
             webpackConfig,
             karmaOptions,
-            watch: args.watch || args.w
+            watch: args.watch || args.w,
+            browsers: args.browsers || args.b
           } ), ( exitCode ) => {
             console.log( `Karma exited with exitCode ${exitCode}` );
 
