@@ -8,19 +8,8 @@ module.exports = ( api, projectOptions ) => {
   api.chainWebpack( webpackConfig => {
     if ( process.env.NODE_ENV === 'test' ) {
       webpackConfig.merge( {
-        target: 'node',
         devtool: 'inline-cheap-module-source-map'
       } );
-
-      // when target === 'node', vue-loader will attempt to generate
-      // SSR-optimized code. We need to turn that off here.
-      webpackConfig.module
-        .rule( 'vue' )
-        .use( 'vue-loader' )
-        .tap( options => {
-          options.optimizeSSR = false;
-          return options;
-        } );
     }
   } );
 
@@ -30,8 +19,7 @@ module.exports = ( api, projectOptions ) => {
     }, ( args ) => {
       const webpackConfig = api.resolveWebpackConfig();
 
-      process.env.VUE_CLI_BABEL_TARGET_NODE = true
-      process.env.VUE_CLI_BABEL_TRANSPILE_MODULES = true
+      process.env.VUE_CLI_BABEL_TRANSPILE_MODULES = true;
 
       return new Promise( ( resolve, reject ) => {
         let KarmaServer = require( 'karma' ).Server;
@@ -58,3 +46,7 @@ module.exports = ( api, projectOptions ) => {
     }
   );
 };
+
+module.exports.defaultModes = {
+  'test:unit': 'test'
+}
